@@ -23,7 +23,7 @@ class ExtraInfoCollector() {
     fun recordMetadata(metadata: io.grpc.Metadata) {
         for (key in metadata.keys()) {
             record(key, metadata.getAll(Key.of(key, ASCII_STRING_MARSHALLER))?.joinToString())
-            if (key == "x-b3-traceid") {
+            if (key.lowercase() == "x-b3-traceid") {
                 metadata.getAll(Key.of(key, ASCII_STRING_MARSHALLER))?.joinToString()?.let {
                     recordTag("x-trace-id", it)
                 }
@@ -64,17 +64,9 @@ class ExtraInfoCollector() {
         metadata.getAll(Key.of("x-real-ip", ASCII_STRING_MARSHALLER))?.joinToString()?.let {
             ip = it
         }
-        var phone: String? = null
-        metadata.getAll(Key.of("x-user-phone", ASCII_STRING_MARSHALLER))?.joinToString()?.let {
-            phone = it
-        }
-        var companyId: String? = null
-        metadata.getAll(Key.of("x-user-company-id", ASCII_STRING_MARSHALLER))?.joinToString()?.let {
-            companyId = it
-        }
-        val userData = mutableMapOf<String, String>()
-        phone.let { userData["phone"] = it!! }
-        companyId.let { userData["companyId"] = it!! }
+        val userData = metadata.keys()
+            .filter { it.lowercase().startsWith("x-user-data-") }
+            .associateWith { metadata.getAll(Key.of(it, ASCII_STRING_MARSHALLER))?.joinToString()!! }
 
         val user = User()
         user.id = userId
