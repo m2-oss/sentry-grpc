@@ -1,8 +1,10 @@
 
+plugins {
+    id("nebula.release") version "16.0.0"
+}
 
 subprojects {
     group = "ru.m2"
-    version = "1.0-SNAPSHOT"
 
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
@@ -18,7 +20,7 @@ subprojects {
     }
 
     afterEvaluate {
-        extensions.configure<PublishingExtension>() {
+        extensions.configure<PublishingExtension> {
             publications {
                 create<MavenPublication>(name) {
                     from(components["kotlin"])
@@ -53,13 +55,25 @@ subprojects {
 
             repositories {
                 maven {
-                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                    val mavenRepoUrl: String by project
+                    val mavenRepoUsername: String? by project
+                    val mavenRepoPassword: String? by project
+
+                    url = uri(mavenRepoUrl)
+                    if(mavenRepoPassword != null && mavenRepoUsername != null)
                     credentials {
-                        username = System.getenv("OSSRH_USERNAME")
-                        password = System.getenv("OSSRH_PASSWORD")
+                        username = mavenRepoUsername
+                        password = mavenRepoPassword
                     }
                 }
             }
+        }
+
+        extensions.configure<SigningExtension> {
+            val signingKey: String? by project
+            val signingPassword: String? by project
+            useInMemoryPgpKeys(signingKey, signingPassword)
+            sign(extensions.getByType<PublishingExtension>().publications[name])
         }
     }
 }
