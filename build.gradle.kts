@@ -54,16 +54,19 @@ subprojects {
             }
 
             repositories {
-                maven {
-                    val mavenRepoUrl: String by project
-                    val mavenRepoUsername: String? by project
-                    val mavenRepoPassword: String? by project
+                val mavenRepoUrl: String? by project
+                val mavenRepoUsername: String? by project
+                val mavenRepoPassword: String? by project
 
-                    url = uri(mavenRepoUrl)
-                    if(mavenRepoPassword != null && mavenRepoUsername != null)
-                    credentials {
-                        username = mavenRepoUsername
-                        password = mavenRepoPassword
+                if(mavenRepoUrl != null) {
+                    maven {
+
+                        url = uri(mavenRepoUrl!!)
+                        if (mavenRepoPassword != null && mavenRepoUsername != null)
+                            credentials {
+                                username = mavenRepoUsername
+                                password = mavenRepoPassword
+                            }
                     }
                 }
             }
