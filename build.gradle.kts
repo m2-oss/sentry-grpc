@@ -1,4 +1,3 @@
-
 plugins {
     id("nebula.release") version "16.0.0"
 }
@@ -44,7 +43,7 @@ subprojects {
                             }
                         }
                         licenses {
-                            license{
+                            license {
                                 name.set("MIT")
                                 url.set("https://www.opensource.org/licenses/mit-license")
                             }
@@ -58,9 +57,8 @@ subprojects {
                 val mavenRepoUsername: String? by project
                 val mavenRepoPassword: String? by project
 
-                if(mavenRepoUrl != null) {
+                if (mavenRepoUrl != null) {
                     maven {
-
                         url = uri(mavenRepoUrl!!)
                         if (mavenRepoPassword != null && mavenRepoUsername != null)
                             credentials {
