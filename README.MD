@@ -10,7 +10,7 @@ Plain interceptor
 
 To use plain interceptor add the following dependency to your build.gradle    
 
-    implementation("ru.m2:sentry-grpc-interceptor:1.0.0")
+    implementation("ru.m2:sentry-grpc-interceptor:1.0.7")
 
 Then you could use one of the standard [sentry configuration way](https://docs.sentry.io/platforms/java/configuration/#setting-the-dsn)
 
@@ -24,7 +24,7 @@ Spring boot starter
 
 To use with Spring Boot add following dependency to your build.gradle    
 
-    implementation("ru.m2:sentry-grpc-spring-boot-starter:1.0.0")
+    implementation("ru.m2:sentry-grpc-spring-boot-starter:1.0.7")
 
 Then you could use one of the standard [sentry configuration way](https://docs.sentry.io/platforms/java/configuration/#setting-the-dsn)
 
