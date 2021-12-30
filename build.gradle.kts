@@ -22,7 +22,6 @@ subprojects {
     extensions.configure<JavaPluginExtension> {
         withSourcesJar()
         withJavadocJar()
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     tasks {
