@@ -49,6 +49,8 @@ subprojects {
                     from(components["java"])
                     pom {
                         name.set("Sentry gRPC integration")
+                        description.set("Sends gRPC calls to sentry")
+                        url.set("https://github.com/m2-oss")
                         scm {
                             connection.set("git@github.com:m2-oss/sentry-grpc.git")
                             developerConnection.set("git@github.com:m2-oss/sentry-grpc.git")
@@ -64,6 +66,14 @@ subprojects {
                                 name.set("Maxim Gorelikov")
                                 email.set("GorelikovMV@m2.ru")
                                 url.set("https://github.com/gorelikov")
+                            }
+                        }
+                        developers {
+                            developer {
+                                name.set("Andrew Perepelkin")
+                                email.set("perepelkin.work@gmail.com")
+                                organization.set("M2")
+                                organizationUrl.set("https://m2.ru")
                             }
                         }
                         licenses {
