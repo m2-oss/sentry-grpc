@@ -1,5 +1,14 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     id("nebula.release") version "16.0.0"
+    id("org.jetbrains.dokka") version ("1.6.10")
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
 subprojects {
@@ -7,14 +16,29 @@ subprojects {
 
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
+    apply(plugin = "java-library")
+    apply(plugin = "org.jetbrains.dokka")
 
-    repositories {
-        mavenCentral()
+    extensions.configure<JavaPluginExtension> {
+        withSourcesJar()
+        withJavadocJar()
     }
 
     tasks {
         withType<Test> {
             useJUnitPlatform()
+        }
+        withType<DokkaTask> {
+            dokkaSourceSets {
+                create("main") {
+                    sourceRoots.from(file("src"))
+                    includeNonPublic.set(true)
+                }
+            }
+        }
+        named<Jar>("javadocJar") {
+            from(project.tasks.getByName<DokkaTask>("dokkaJavadoc").outputDirectory)
+            dependsOn("dokkaJavadoc")
         }
     }
 
@@ -22,7 +46,7 @@ subprojects {
         extensions.configure<PublishingExtension> {
             publications {
                 create<MavenPublication>(name) {
-                    from(components["kotlin"])
+                    from(components["java"])
                     pom {
                         name.set("Sentry gRPC integration")
                         scm {
@@ -73,7 +97,9 @@ subprojects {
         extensions.configure<SigningExtension> {
             val signingKey: String? by project
             val signingPassword: String? by project
-            useInMemoryPgpKeys(signingKey, signingPassword)
+            if (signingKey != null && signingPassword != null) {
+                useInMemoryPgpKeys(signingKey, signingPassword)
+            }
             sign(extensions.getByType<PublishingExtension>().publications[name])
         }
     }
